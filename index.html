@@ -107,8 +107,8 @@ button.cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .tog{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
 .tog button{border-radius:30px;padding:7px 14px;font-size:.95rem}
 .tog button[aria-pressed=false]{opacity:.55}
-button:focus-visible{outline:2px solid #fff;outline-offset:2px}
-.prop{position:fixed;z-index:6;pointer-events:none;transition:opacity .6s}
+button:focus-visible{outline:2px solid #fff;outline-offset:2px}\n.tiles button{min-width:0;min-height:48px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}\n.tog button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.prop{position:fixed;z-index:4;pointer-events:none;transition:opacity .6s}
 .p-sp{width:3px;height:100px;background:linear-gradient(#e8e8e8,#8a8a8a);transform-origin:0 0;transform:rotate(30deg)}
 .p-an{width:46px;height:66px;margin-left:-23px;clip-path:polygon(50% 0,100% 100%,0 100%);background:linear-gradient(#e0702a 0 18%,#ffc857 18% 26%,#b02a12 26% 70%,#ffc857 70% 78%,#7a1a0a 78%)}
 .p-ch{width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:conic-gradient(#ff8a1f,#7a0b1c,#ffc857,#7a0b1c,#ff8a1f);animation:spin .35s linear infinite}
@@ -118,6 +118,24 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .village::before{content:"";position:absolute;inset:0;clip-path:polygon(0 100%,0 62%,8% 62%,8% 50%,14% 42%,20% 50%,20% 60%,30% 60%,30% 45%,38% 45%,38% 58%,50% 58%,50% 40%,58% 32%,66% 40%,66% 60%,78% 60%,78% 48%,86% 48%,86% 56%,100% 56%,100% 100%);background:radial-gradient(circle at 17% 66%,#ffc857 0 2px,#0000 3px),radial-gradient(circle at 34% 62%,#ffc857 0 2px,#0000 3px),radial-gradient(circle at 54% 60%,#ffc857 0 2px,#0000 3px),radial-gradient(circle at 72% 66%,#ffc857 0 2px,#0000 3px),radial-gradient(circle at 90% 70%,#ffc857 0 2px,#0000 3px),linear-gradient(#0e1a38,#050a18)}
 .village span{position:absolute;bottom:50%;font-size:1.8rem;filter:drop-shadow(0 0 12px #ff8a1f)}
 .rm *{animation:none!important}
+
+@media(max-width:600px){
+  .sk{width:100%;height:100%;min-height:0;gap:clamp(8px,1.5vh,14px)}
+  #spacer{flex:1 1 0;min-height:clamp(110px,17vh,160px)}
+  .tiles{width:100%;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tiles button{min-height:54px;padding:10px 7px;font-size:clamp(.98rem,4.1vw,1.12rem);line-height:1.2;border-radius:12px}
+  #all{width:min(100%,420px);min-height:58px;padding:12px 16px;font-size:clamp(1.15rem,4.8vw,1.45rem)}
+  .tog{width:100%;gap:6px;flex-wrap:nowrap;margin-top:6px}
+  .tog button{min-width:0;flex:1 1 0;white-space:nowrap;padding:8px 6px;font-size:clamp(.78rem,3.2vw,.92rem)}
+  .sk>div:first-child .gh{font-size:clamp(1.2rem,6vw,1.7rem)}
+  .sk .sub{font-size:clamp(1rem,4vw,1.2rem)!important;max-width:27ch}
+}
+@media(max-width:600px) and (max-height:760px){
+  #spacer{min-height:84px}
+  .sk{gap:8px}
+  .tiles button{min-height:48px}
+}
+
 </style>
 </head>
 <body>
@@ -164,7 +182,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 <section class="screen hide" id="sky"><div class="in sk">
   <div><p class="eyebrow">Light up the night</p><h2 class="gh" style="max-width:none">Let’s Light Up The Sky!</h2><p class="sub" style="margin:0 auto;font-size:1.15rem">Because celebrations are better when everyone joins in!</p></div>
   <div id="spacer"></div>
-  <div class="tiles"><button data-k="sp">✨ Phuljhadi</button><button data-k="an">🔥 Anar</button><button data-k="ch">🌀 Chakri</button><button data-k="sky">🎆 Sky Fireworks</button></div>
+  <div class="tiles"><button type="button" data-k="sp" aria-pressed="false">✨ Phuljhadi</button><button type="button" data-k="an" aria-pressed="false">🔥 Anar</button><button type="button" data-k="ch" aria-pressed="false">🌀 Chakri</button><button type="button" data-k="sky" aria-pressed="false">🎆 Sky Fireworks</button></div>
   <button class="cta" id="all">Celebrate Diwali Together!</button>
   <div class="tog"><button id="tsnd" aria-pressed="true">🔊 Sound effects</button><button id="trm" aria-pressed="false">Reduced motion</button><button id="again">Start over</button></div>
   <p class="note">A digital display only. No real crackers involved.</p>
@@ -172,7 +190,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
 <script>
 const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
-let name="",muted=false,show=false;
+let name="",muted=false,show=false,skyMode=false;
 
 for(let i=0;i<70;i++){const s=document.createElement("div");s.className="star";s.style.cssText="left:"+Math.random()*100+"vw;top:"+Math.random()*80+"vh;animation-delay:"+Math.random()*3+"s";document.body.prepend(s)}
 const cols=["#ffc857","#ff4d6d","#4dd2ff","#7dff8a","#ff8a1f","#d77bff"],L=$("lights");
@@ -188,15 +206,15 @@ for(let i=0;i<9;i++){const c=AC.createBufferSource(),cg=AC.createGain(),h=AC.cre
 $("mute").onclick=()=>{muted=!muted;$("mute").textContent=muted?"🔇":"🔊";if(M)M.gain.value=muted?0:1};
 
 const cv=$("fx"),x=cv.getContext("2d"),hues=[30,45,350,300,190,120,15,55];let W,H,rk=[],pt=[],em=[];
-function rs(){const r=devicePixelRatio||1;W=innerWidth;H=innerHeight;cv.width=W*r;cv.height=H*r;x.setTransform(r,0,0,r,0,0)}rs();addEventListener("resize",rs);
+function rs(){const r=Math.min(devicePixelRatio||1,1.5);W=document.documentElement.clientWidth||innerWidth;H=innerHeight;cv.style.width=W+"px";cv.style.height=H+"px";cv.width=Math.round(W*r);cv.height=Math.round(H*r);x.setTransform(r,0,0,r,0,0)}rs();addEventListener("resize",rs,{passive:true});addEventListener("orientationchange",rs,{passive:true});
 function launch(tx,ty){if(tx==null){tx=W*(.15+Math.random()*.7);ty=H*(.12+Math.random()*.33)}const d=.8+Math.random()*.4;whistle(d);const sx=tx+(Math.random()-.5)*80;rk.push({x:sx,sx,y:H,tx,ty,t:0,d:d*60,h:hues[Math.random()*hues.length|0]})}
-function burst(px,py,h){const n=80+Math.random()*50|0,ring=Math.random()<.35;for(let i=0;i<n;i++){const a=Math.PI*2*i/n+Math.random()*.1,v=ring?4.2:1+Math.random()*4.5;pt.push({x:px,y:py,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,k:.011+Math.random()*.012,h:h+(Math.random()*30-15)})}boom()}
+function quality(){return W<600?.62:1}\nfunction burst(px,py,h){const n=Math.round((80+Math.random()*50)*quality()),ring=Math.random()<.35;for(let i=0;i<n;i++){const a=Math.PI*2*i/n+Math.random()*.1,v=ring?4.2:1+Math.random()*4.5;pt.push({x:px,y:py,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,k:.011+Math.random()*.012,h:h+(Math.random()*30-15)})}boom()}
 function volley(k){for(let i=0;i<k;i++)setTimeout(()=>launch(),i*350)}
 function loop(){stepEm();x.globalCompositeOperation="destination-out";x.fillStyle="rgba(0,0,0,.2)";x.fillRect(0,0,W,H);x.globalCompositeOperation="lighter";
 for(let i=rk.length-1;i>=0;i--){const r=rk[i];r.t++;const p=Math.min(r.t/r.d,1),e=1-(1-p)*(1-p);r.x=r.sx+(r.tx-r.sx)*p;r.y=H+(r.ty-H)*e;x.fillStyle="hsl("+r.h+",100%,75%)";x.beginPath();x.arc(r.x,r.y,2.6,0,7);x.fill();pt.push({x:r.x,y:r.y,vx:(Math.random()-.5)*.6,vy:Math.random()*.8,l:.6,k:.05,h:40});if(p>=1){burst(r.tx,r.ty,r.h);rk.splice(i,1)}}
 for(let i=pt.length-1;i>=0;i--){const q=pt[i];q.x+=q.vx;q.y+=q.vy;q.vx*=.985;q.vy=q.vy*.985+(q.g||.04);q.l-=q.k;if(q.l<=0){pt.splice(i,1);continue}x.fillStyle="hsla("+q.h+",100%,65%,"+q.l+")";x.beginPath();x.arc(q.x,q.y,2,0,7);x.fill()}
 requestAnimationFrame(loop)}loop();
-setInterval(()=>{if(show&&!rm&&rk.length<3)launch()},1200);
+setInterval(()=>{if(show&&!skyMode&&!rm&&rk.length<3)launch()},1200);
 
 const nm=$("nm");
 try{const h=decodeURIComponent(location.hash.slice(1));if(h)nm.value=h.slice(0,30)}catch(e){}
@@ -230,18 +248,18 @@ $("again").onclick=()=>location.reload();
 
 var rm=false;
 function stepEm(){for(let i=em.length-1;i>=0;i--){const e=em[i];e.t++;if(e.t>e.d){em.splice(i,1);continue}const k=rm?.5:1;
-if(e.k==="sp"){const a=e.t*.15,px=e.x+Math.cos(a)*6,py=e.y+Math.sin(a*1.3)*6;for(let j=0;j<6*k;j++){const b=Math.random()*6.28,v=1+Math.random()*3;pt.push({x:px,y:py,vx:Math.cos(b)*v,vy:Math.sin(b)*v-.5,l:.7,k:.04+Math.random()*.03,h:35+Math.random()*25,g:.08})}}
-else if(e.k==="an"){for(let j=0;j<9*k;j++)pt.push({x:e.x+(Math.random()-.5)*6,y:e.y,vx:(Math.random()-.5)*3.2,vy:-(5+Math.random()*5),l:1,k:.012+Math.random()*.01,h:30+Math.random()*30,g:.13})}
-else if(e.k==="ch"){const a=e.t*.45;for(let j=0;j<4*k;j++){const q=a+j*1.57;pt.push({x:e.x+Math.cos(q)*26,y:e.y+Math.sin(q)*26,vx:-Math.sin(q)*4+Math.random()-.5,vy:Math.cos(q)*4+Math.random()-.5,l:.8,k:.035,h:15+Math.random()*30,g:.03})}}}}
-function fizz(d){if(!AC)return;const t=AC.currentTime,s=AC.createBufferSource(),h=AC.createBiquadFilter(),g=AC.createGain();s.buffer=noise(d);h.type="highpass";h.frequency.value=4000;g.gain.setValueAtTime(.06,t);g.gain.linearRampToValueAtTime(.0001,t+d);s.connect(h).connect(g).connect(M);s.start(t)}
-function pos(f){const r=$("spacer").getBoundingClientRect();return[W*f,r.top+r.height*.55]}
+if(e.k==="sp"){const a=e.t*.15,px=e.x+Math.cos(a)*6,py=e.y+Math.sin(a*1.3)*6;for(let j=0;j<Math.ceil(6*k*quality());j++){const b=Math.random()*6.28,v=1+Math.random()*3;pt.push({x:px,y:py,vx:Math.cos(b)*v,vy:Math.sin(b)*v-.5,l:.7,k:.04+Math.random()*.03,h:35+Math.random()*25,g:.08})}}
+else if(e.k==="an"){for(let j=0;j<Math.ceil(9*k*quality());j++)pt.push({x:e.x+(Math.random()-.5)*6,y:e.y,vx:(Math.random()-.5)*3.2,vy:-(5+Math.random()*5),l:1,k:.012+Math.random()*.01,h:30+Math.random()*30,g:.13})}
+else if(e.k==="ch"){const a=e.t*.45;for(let j=0;j<Math.ceil(4*k*quality());j++){const q=a+j*1.57;pt.push({x:e.x+Math.cos(q)*26,y:e.y+Math.sin(q)*26,vx:-Math.sin(q)*4+Math.random()-.5,vy:Math.cos(q)*4+Math.random()-.5,l:.8,k:.035,h:15+Math.random()*30,g:.03})}}}}
+function fizz(d){if(!AC||muted)return;const t=AC.currentTime,s=AC.createBufferSource(),h=AC.createBiquadFilter(),g=AC.createGain();s.buffer=noise(d);h.type="highpass";h.frequency.value=4000;g.gain.setValueAtTime(.06,t);g.gain.linearRampToValueAtTime(.0001,t+d);s.connect(h).connect(g).connect(M);s.start(t)}
+function pos(f){const r=$("spacer").getBoundingClientRect();const spread=W<600?.62:1;const px=W*.5+(f-.5)*W*spread;return[Math.max(32,Math.min(W-32,px)),r.top+r.height*.55]}
 function prop(c,px,py,ms){const d=document.createElement("div");d.className="prop "+c;d.style.left=px+"px";d.style.top=py+"px";document.body.appendChild(d);setTimeout(()=>d.style.opacity=0,ms);setTimeout(()=>d.remove(),ms+700)}
-function light(k){ac();if(k==="sky"){volley(6);return}const C={sp:[.27,300,5000],an:[.5,300,5000],ch:[.74,260,4300]}[k],[px,py]=pos(C[0]);prop("p-"+k,px,py,C[2]);em.push({k,x:px,y:py,t:0,d:C[1]});fizz(C[2]/1000)}
+function light(k){try{ac()}catch(error){console.warn("Sound unavailable:",error)}pt.length=0;em.length=0;rk.length=0;document.querySelectorAll(".prop").forEach(p=>p.remove());if(k==="sky"){volley(6);return}const C={sp:[.27,300,5000],an:[.5,300,5000],ch:[.74,260,4300]}[k],[px,py]=pos(C[0]);prop("p-"+k,px,py,C[2]);em.push({k,x:px,y:py,t:0,d:C[1]});fizz(C[2]/1000)}
 const FK=["k","g","l","b","j"];let more=false;
 $("mith").onclick=()=>{if(!more){more=true;$("mith").textContent="Share Some More 🍬"}if(rm)return;
 for(let i=0;i<16;i++){const f=document.createElement("div"),t=3+Math.random()*2;f.className="fall";f.style.cssText="left:"+Math.random()*94+"vw;--s:"+(28+Math.random()*18)+"px;--t:"+t+"s;animation-delay:"+Math.random()+"s";f.innerHTML='<i class="sm '+FK[i%5]+'"></i>';document.body.appendChild(f);setTimeout(()=>f.remove(),(t+1.2)*1000)}};
-$("tosky").onclick=async()=>{$("giftscr").classList.add("hide");document.body.classList.add("sky-on");volley(3);await sleep(900);$("sky").classList.remove("hide")};
-document.querySelectorAll(".tiles button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tiles button").forEach(o=>o.classList.remove("on"));b.classList.add("on");light(b.dataset.k)});
+$("tosky").onclick=async()=>{show=false;skyMode=true;pt.length=0;em.length=0;$("giftscr").classList.add("hide");document.body.classList.add("sky-on");volley(3);await sleep(900);$("sky").classList.remove("hide")};
+document.querySelectorAll(".tiles button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tiles button").forEach(o=>{o.classList.remove("on");o.setAttribute("aria-pressed","false")});b.classList.add("on");b.setAttribute("aria-pressed","true");light(b.dataset.k)}));
 $("all").onclick=()=>{["sp","an","ch"].forEach((k,i)=>setTimeout(()=>light(k),i*400));volley(7)};
 $("tsnd").onclick=()=>$("mute").click();
 $("mute").addEventListener("click",()=>$("tsnd").setAttribute("aria-pressed",String(!muted)));
